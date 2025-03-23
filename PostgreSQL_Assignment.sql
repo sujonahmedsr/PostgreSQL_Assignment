@@ -41,7 +41,6 @@ INSERT INTO books (title, author, price, stock, published_year) VALUES
 
 SELECT * FROM books;
 
-
 INSERT INTO customers (name, email) VALUES
 ('Alice', 'alice@email.com'),  
 ('Bob', 'bob@email.com'),  
@@ -57,7 +56,6 @@ INSERT INTO orders (customer_id, book_id, quantity) VALUES
 
 SELECT * FROM orders;
 
-
 -- 1️⃣ Find books that are out of stock.
 SELECT title FROM books WHERE stock = 0;
 
@@ -66,9 +64,34 @@ SELECT * FROM books ORDER BY price DESC LIMIT 1;
 
 -- 3️⃣ Find the total number of orders placed by each customer.
 SELECT name, count(*) as total_orders  FROM customers
-JOIN orders on orders.id = customers.id
-GROUP BY name
+JOIN orders on orders.customer_id = customers.id
+GROUP BY customers.id
 
+-- 4️⃣ Calculate the total revenue generated from book sales.
+SELECT sum(quantity * price) as total_revenue from orders
+JOIN books on books.id = orders.book_id
+
+-- 5️⃣ List all customers who have placed more than one order.
+SELECT name, count(*) as orders_count  FROM orders
+JOIN customers on customers.id = orders.customer_id
+GROUP BY name
+HAVING count(*) > 1
+
+-- 6️⃣ Find the average price of books in the store.
+SELECT round(avg(price), 2) as avg_book_price from books
+
+-- 7️⃣ Increase the price of all books published before 2000 by 10%.
+UPDATE books
+SET price = price * 1.1
+WHERE published_year < 2000;
+
+-- 8️⃣ Delete customers who haven't placed any orders.
+DELETE FROM customers
+WHERE id NOT IN(
+    SELECT DISTINCT customer_id FROM orders
+)
+
+SELECT * FROM customers
 
 
 
