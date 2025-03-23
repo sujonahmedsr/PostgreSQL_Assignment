@@ -55,7 +55,19 @@ INSERT INTO orders (customer_id, book_id, quantity) VALUES
 (2, 1, 1),  
 (1, 3, 2);
 
-SELECT * FROM customers;
+SELECT * FROM orders;
+
+
+-- 1️⃣ Find books that are out of stock.
+SELECT title FROM books WHERE stock = 0;
+
+-- 2️⃣ Retrieve the most expensive book in the store.
+SELECT * FROM books ORDER BY price DESC LIMIT 1;
+
+-- 3️⃣ Find the total number of orders placed by each customer.
+SELECT name, count(*) as total_orders  FROM customers
+JOIN orders on orders.id = customers.id
+GROUP BY name
 
 
 
